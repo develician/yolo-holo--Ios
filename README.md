@@ -7,4 +7,6 @@ yolo?holo! ios version app
 - [ ] 백엔드 검증 작업(auth, validation)
 - [ ] 세부 일정 세부 메모, (테이블뷰 클릭시 메모장 마련)
 - [ ] 비용 관리 탭
-- [ ] 추천 일
+- [ ] 추천 일정 탭
+
+
