@@ -86,7 +86,13 @@ class LoginController: UIViewController {
                 return
             }
             guard let result = result else {return}
-            if result.grantedPermissions.contains("email") {
+            print(result)
+            guard let grantedPermissions = result.grantedPermissions else {
+                print("canceled")
+                return
+                
+            }
+            if grantedPermissions.contains("email") {
                 self.fetchProfile()
             }
         }
@@ -127,7 +133,8 @@ class LoginController: UIViewController {
             //              backend models:account -> profile{username: fbId+fbToken (socialKey), thumbnail: pictureUrl}, email: fbEmail, social: {facebook: {id: fbId, accessToken: fbToken, displayName: fbName}}, password: facebook user,
             
             AuthService.shared.fetchFacebook(fbToken: fbToken, pictureUrl: pictureUrl, fbEmail: "\(fbEmail)", fbId: "\(fbId)", fbName: "\(fbName)", socialKey: socialKey).subscribe(onNext: { (respJSON) in
-//                print(respJSON)
+                print("successed!")
+                print(respJSON)
             }, onError: { (error) in
                 print(error.localizedDescription)
             }, onCompleted: {

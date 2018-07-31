@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		5B010217211085C700F0AE55 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B010216211085C700F0AE55 /* Todo.swift */; };
 		5B0102192110860500F0AE55 /* TodoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0102182110860500F0AE55 /* TodoViewModel.swift */; };
+		5B01021B2110AE1A00F0AE55 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B01021A2110AE1A00F0AE55 /* Launch Screen.storyboard */; };
+		5B01021E2110B77700F0AE55 /* SuggestionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B01021D2110B77700F0AE55 /* SuggestionController.swift */; };
+		5B0102202110B80B00F0AE55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B01021F2110B80A00F0AE55 /* Assets.xcassets */; };
+		5B0102242110B98700F0AE55 /* SuggestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0102232110B98700F0AE55 /* SuggestionTableViewCell.swift */; };
+		5B0102272110B9CB00F0AE55 /* Suggestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B0102262110B9CB00F0AE55 /* Suggestion.swift */; };
 		5B055F6D2106EAFD0078301B /* PlanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B055F6C2106EAFD0078301B /* PlanService.swift */; };
 		5B055F6F2106ED6A0078301B /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B055F6E2106ED6A0078301B /* Plan.swift */; };
 		5B055F712106F00F0078301B /* PlanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B055F702106F00F0078301B /* PlanViewModel.swift */; };
@@ -24,7 +29,6 @@
 		5B120129210887DF00FF1DDE /* ReadDetailPlanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B120128210887DF00FF1DDE /* ReadDetailPlanController.swift */; };
 		5B4F09312105D8140004B743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F09302105D8140004B743 /* AppDelegate.swift */; };
 		5B4F09332105D8140004B743 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F09322105D8140004B743 /* ViewController.swift */; };
-		5B4F09382105D8140004B743 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B4F09372105D8140004B743 /* Assets.xcassets */; };
 		5B4F09492105D8690004B743 /* CustomNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F09482105D8690004B743 /* CustomNavigationController.swift */; };
 		5B4F094C2105D8870004B743 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F094B2105D8870004B743 /* LoginController.swift */; };
 		5B4F094E2105D8900004B743 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B4F094D2105D8900004B743 /* RegisterController.swift */; };
@@ -66,6 +70,11 @@
 		52D45B990D9977F4F8369B2A /* Pods-yoloholo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-yoloholo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-yoloholo/Pods-yoloholo.debug.xcconfig"; sourceTree = "<group>"; };
 		5B010216211085C700F0AE55 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		5B0102182110860500F0AE55 /* TodoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewModel.swift; sourceTree = "<group>"; };
+		5B01021A2110AE1A00F0AE55 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		5B01021D2110B77700F0AE55 /* SuggestionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionController.swift; sourceTree = "<group>"; };
+		5B01021F2110B80A00F0AE55 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5B0102232110B98700F0AE55 /* SuggestionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestionTableViewCell.swift; sourceTree = "<group>"; };
+		5B0102262110B9CB00F0AE55 /* Suggestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		5B055F6C2106EAFD0078301B /* PlanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanService.swift; sourceTree = "<group>"; };
 		5B055F6E2106ED6A0078301B /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		5B055F702106F00F0078301B /* PlanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanViewModel.swift; sourceTree = "<group>"; };
@@ -83,7 +92,6 @@
 		5B4F092D2105D8140004B743 /* yoloholo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yoloholo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B4F09302105D8140004B743 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B4F09322105D8140004B743 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		5B4F09372105D8140004B743 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5B4F093C2105D8140004B743 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B4F09482105D8690004B743 /* CustomNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationController.swift; sourceTree = "<group>"; };
 		5B4F094B2105D8870004B743 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -140,6 +148,38 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		5B01021C2110B76100F0AE55 /* SuggestionTab */ = {
+			isa = PBXGroup;
+			children = (
+				5B01021D2110B77700F0AE55 /* SuggestionController.swift */,
+			);
+			path = SuggestionTab;
+			sourceTree = "<group>";
+		};
+		5B0102212110B96E00F0AE55 /* SuggestionTab */ = {
+			isa = PBXGroup;
+			children = (
+				5B0102222110B97900F0AE55 /* Cells */,
+			);
+			path = SuggestionTab;
+			sourceTree = "<group>";
+		};
+		5B0102222110B97900F0AE55 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				5B0102232110B98700F0AE55 /* SuggestionTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		5B0102252110B9B600F0AE55 /* SuggestionTab */ = {
+			isa = PBXGroup;
+			children = (
+				5B0102262110B9CB00F0AE55 /* Suggestion.swift */,
+			);
+			path = SuggestionTab;
+			sourceTree = "<group>";
+		};
 		5B4F09242105D8140004B743 = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +201,7 @@
 		5B4F092F2105D8140004B743 /* yoloholo */ = {
 			isa = PBXGroup;
 			children = (
+				5B01021F2110B80A00F0AE55 /* Assets.xcassets */,
 				5BD2F989210D9AFC00EF0C5B /* i18n */,
 				5BD2F980210D8AA800EF0C5B /* Utils */,
 				5B0DC3CE2109A11600193106 /* yoloholo.entitlements */,
@@ -172,9 +213,9 @@
 				5B4F09422105D83A0004B743 /* Service */,
 				5B4F09302105D8140004B743 /* AppDelegate.swift */,
 				5B4F09322105D8140004B743 /* ViewController.swift */,
-				5B4F09372105D8140004B743 /* Assets.xcassets */,
 				5B4F093C2105D8140004B743 /* Info.plist */,
 				5B8E2559210DA01D00BA850C /* Localizable.strings */,
+				5B01021A2110AE1A00F0AE55 /* Launch Screen.storyboard */,
 			);
 			path = yoloholo;
 			sourceTree = "<group>";
@@ -206,6 +247,7 @@
 		5B4F09452105D8490004B743 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				5B0102212110B96E00F0AE55 /* SuggestionTab */,
 				5B4F096121060E690004B743 /* SettingTableViewCell.swift */,
 				5B055F722106F88C0078301B /* PlanListTableViewCell.swift */,
 				5B055F782106FDA50078301B /* DayListCollectionViewCell.swift */,
@@ -221,6 +263,7 @@
 		5B4F09462105D84D0004B743 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5B0102252110B9B600F0AE55 /* SuggestionTab */,
 				5B4F09512105E0940004B743 /* Profile.swift */,
 				5B055F6E2106ED6A0078301B /* Plan.swift */,
 				5B1201202108428500FF1DDE /* DetailPlan.swift */,
@@ -262,6 +305,7 @@
 		5B4F095A2105EA140004B743 /* TabBarViews */ = {
 			isa = PBXGroup;
 			children = (
+				5B01021C2110B76100F0AE55 /* SuggestionTab */,
 				5B4F095B2105EA230004B743 /* PlanListController.swift */,
 				5B4F095D210609E80004B743 /* SettingViewController.swift */,
 				5B4F096521061CBB0004B743 /* ChangeProfileController.swift */,
@@ -381,7 +425,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B4F09382105D8140004B743 /* Assets.xcassets in Resources */,
+				5B01021B2110AE1A00F0AE55 /* Launch Screen.storyboard in Resources */,
+				5B0102202110B80B00F0AE55 /* Assets.xcassets in Resources */,
 				5B8E2557210DA01D00BA850C /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,10 +484,12 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/CalendarDateRangePickerViewController/CalendarDateRangePickerViewController.framework",
+				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Floaty/Floaty.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxKeyboard/RxKeyboard.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -453,10 +500,12 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CalendarDateRangePickerViewController.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Floaty.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxKeyboard.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -488,9 +537,11 @@
 				5B8E25AB210E18C100BA850C /* TodoEditorController.swift in Sources */,
 				5B1201232108432000FF1DDE /* DetailPlanViewModel.swift in Sources */,
 				5BD2F984210D8C1400EF0C5B /* AppDelegateUtil.swift in Sources */,
+				5B0102272110B9CB00F0AE55 /* Suggestion.swift in Sources */,
 				5B8E259B210DD59400BA850C /* ProfileAPI.swift in Sources */,
 				5B8E259D210DD6BC00BA850C /* PlanAPI.swift in Sources */,
 				5B8E25A1210DFF4500BA850C /* PlaceImageCell.swift in Sources */,
+				5B0102242110B98700F0AE55 /* SuggestionTableViewCell.swift in Sources */,
 				5B120125210848E200FF1DDE /* AddDetailController.swift in Sources */,
 				5B120129210887DF00FF1DDE /* ReadDetailPlanController.swift in Sources */,
 				5B8E25AF210ECA4F00BA850C /* TodoService.swift in Sources */,
@@ -522,6 +573,7 @@
 				5B8E25A5210E0E1E00BA850C /* TodoButtonTableViewCell.swift in Sources */,
 				5B8E2598210DD30B00BA850C /* AuthAPI.swift in Sources */,
 				5B1201212108428500FF1DDE /* DetailPlan.swift in Sources */,
+				5B01021E2110B77700F0AE55 /* SuggestionController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

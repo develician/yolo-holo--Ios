@@ -8,6 +8,7 @@ target 'yoloholo' do
   # Pods for yoloholo
 	pod 'RxSwift'
 	pod 'RxCocoa'
+    pod 'RxDataSources'
 	pod 'Alamofire'
 	pod 'SwiftyJSON'
 	pod 'Floaty'

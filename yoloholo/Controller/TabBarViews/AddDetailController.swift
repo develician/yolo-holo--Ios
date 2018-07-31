@@ -161,39 +161,7 @@ class AddDetailController: UIViewController {
             make.height.equalTo(32)
         }
         
-//        let viewComponents = [scrollView]
-//        viewComponents.forEach {
-//            $0.translatesAutoresizingMaskIntoConstraints = false
-//            view.addSubview($0)
-//        }
-//
-//
-//
-//        let scrollViewComponents = [contentView]
-//        scrollViewComponents.forEach {
-//            $0.translatesAutoresizingMaskIntoConstraints = false
-//            scrollView.addSubview($0)
-//        }
-//
-//        let contentViewComponents = [destNameTextField, googleMapButton, todoTitleLable, todoAddField, todoAddButton, todoTableView]
-//        contentViewComponents.forEach {
-//            $0.translatesAutoresizingMaskIntoConstraints = false
-//            contentView.addSubview($0)
-//        }
-//
-//        scrollView.anchor(top: topLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
-//
-//        contentView.anchor(top: scrollView.topAnchor, leading: scrollView.leadingAnchor, bottom: scrollView.bottomAnchor, trailing: scrollView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 1500))
-//
-//        destNameTextField.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
-//
-//        googleMapButton.anchor(top: destNameTextField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
-//
-//        todoTitleLable.anchor(top: googleMapButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24))
-//        todoAddField.anchor(top: todoTitleLable.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
-//        todoAddButton.anchor(top: todoAddField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
-//
-//        todoTableView.anchor(top: todoAddButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 56, right: 24))
+
     }
     
     fileprivate func setupNavBar() {
@@ -360,7 +328,7 @@ extension AddDetailController: GMSPlacePickerViewControllerDelegate {
         viewController.dismiss(animated: true, completion: nil)
         
         print("No place selected")
-        self.googleMapEnabled = false
+//        self.googleMapEnabled = false
     }
     
     

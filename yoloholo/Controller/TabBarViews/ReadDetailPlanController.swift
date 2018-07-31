@@ -194,14 +194,18 @@ class ReadDetailPlanController: UITableViewController {
         if indexPath.section == 1
         {
             let cell = tableView.dequeueReusableCell(withIdentifier: stackViewCellId, for: indexPath) as! StackViewTableViewCell
-            if let nextLatitude = self.nextLatitude, let nextLongitude = self.nextLongitude {
+            
                 
-                cell.nextLatitude = nextLatitude
-                cell.nextLongitude = nextLongitude
+            
                 cell.arriveButton.addTarget(self, action: #selector(openGoogleMapArrive), for: UIControlEvents.touchUpInside)
                 cell.departButton.addTarget(self, action: #selector(openGoogleMapDepart), for: UIControlEvents.touchUpInside)
-                cell.nextDestButton.addTarget(self, action: #selector(openGoogleMapNext), for: UIControlEvents.touchUpInside)
-
+            
+                if let nextLatitude = self.nextLatitude, let nextLongitude = self.nextLongitude {
+                    cell.nextLatitude = nextLatitude
+                    cell.nextLongitude = nextLongitude
+                    cell.nextDestButton.addTarget(self, action: #selector(openGoogleMapNext), for: UIControlEvents.touchUpInside)
+                } else {
+                    cell.nextDestButton.isHidden = true
             }
             return cell
         }
@@ -382,10 +386,10 @@ extension ReadDetailPlanController {
         if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
 
             guard let latitude = self.detailPlanViewModel?.latitude else {
-                return
+                fatalError("parsingError")
             }
             guard let longitude = self.detailPlanViewModel?.longitude else {
-                return
+                 fatalError("parsingError")
             }
             
             guard let url = URL(string: "comgooglemaps://?saddr=&daddr=\(latitude),\(longitude)&directionsmode=transit") else {

@@ -128,6 +128,9 @@ class AuthService: NSObject {
                     if statusCode == 500 {
                         observer.onError(NSError(domain: "login", code: 100, userInfo: ["message" : "알수없는 오류가 발생했습니다. 다시 시도해주세요."]))
                     }
+                    if statusCode == 409 {
+                        observer.onError(NSError(domain: "login", code: 100, userInfo: ["message" : "페이스북 로그인을 사용해주세요."]))
+                    }
                     
                     break
                 }
@@ -252,7 +255,7 @@ class AuthService: NSObject {
             let request = Alamofire.request(url, method: HTTPMethod.post, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {
                 case .success(let value):
-                    if let statusCode = resp.response?.statusCode, (statusCode == 208 || statusCode == 200) {
+                    if let statusCode = resp.response?.statusCode, (statusCode == 201 || statusCode == 200) {
                         let responseJSON = JSON(value)
                         observer.onNext(responseJSON)
                         observer.onCompleted()
