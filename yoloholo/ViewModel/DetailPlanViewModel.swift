@@ -18,9 +18,9 @@ struct DetailPlanViewModel {
     let destName: String
     let username: String
     
-    let latitude: Double
-    let longitude: Double
-    let placeId: String
+    let latitude: Double?
+    let longitude: Double?
+    let placeId: String?
     let todoList: [JSON]
     
     init(detailPlan: DetailPlan) {
@@ -31,9 +31,16 @@ struct DetailPlanViewModel {
         self.destName = detailPlan.destName
         self.username = detailPlan.username
         
-        self.latitude = detailPlan.latitude
-        self.longitude = detailPlan.longitude
-        self.placeId = detailPlan.placeId
+        if let latitude = detailPlan.latitude, let longitude = detailPlan.longitude, let placeId = detailPlan.placeId {
+            self.latitude = latitude
+            self.longitude = longitude
+            self.placeId = placeId
+        } else {
+            self.latitude = nil
+            self.longitude = nil
+            self.placeId = nil
+        }
+        
         self.todoList = detailPlan.todoList
 
     }

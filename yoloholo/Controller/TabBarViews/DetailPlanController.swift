@@ -215,41 +215,19 @@ extension DetailPlanController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        print(indexPath.row)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CircleCollectionViewCell
         
-        
-        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: self.detailPlanList[indexPath.row].placeId) { (photos, error) -> Void in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                if let firstPhoto = photos?.results.first {
-                    GMSPlacesClient.shared().loadPlacePhoto(firstPhoto, callback: {
-                        (photo, error) -> Void in
-                        if let error = error {
-                            
-                            print("Error: \(error.localizedDescription)")
-                        }
-                        else {
-                            DispatchQueue.main.async {
-                                cell.placeImageView.image = photo
-                            }
-                            
-                            
-                        }
-                    })
-                }
-            }
-        }
-        
-        cell.destNameLabel.text = self.detailPlanList[indexPath.row].destName
-        
+        let targetPlan = self.detailPlanList[indexPath.row]
+    
+        cell.placeViewModel = targetPlan
         
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 300, height: 300)
+        return CGSize(width: 200, height: 200)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

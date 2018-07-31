@@ -43,7 +43,7 @@ class LoginController: UIViewController {
     
     let loginButton: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setTitle("로그인", for: UIControlState.normal)
+        btn.setTitle(NSLocalizedString("로그인", comment: ""), for: UIControlState.normal)
         btn.layer.backgroundColor = UIColor.mainTextBlue.cgColor
         btn.layer.cornerRadius = 10
         return btn
@@ -51,7 +51,7 @@ class LoginController: UIViewController {
 
     let registerButton: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setTitle("회원가입", for: UIControlState.normal)
+        btn.setTitle(NSLocalizedString("회원가입", comment: ""), for: UIControlState.normal)
         btn.layer.backgroundColor = UIColor.rgb(r: 50, g: 199, b: 242).cgColor
         btn.layer.cornerRadius = 10
         return btn
@@ -63,20 +63,11 @@ class LoginController: UIViewController {
 //        btn.delegate = self
         btn.layer.cornerRadius = 10
         btn.layer.backgroundColor = UIColor.FlatColor.Blue.Blue6.cgColor
-        btn.setTitle("페이스북 로그인", for: UIControlState.normal)
+        btn.setTitle(NSLocalizedString("페이스북 로그인", comment: ""), for: UIControlState.normal)
         
         return btn
     }()
     
-//    lazy var facebookLoginButton: FBSDKLoginButton = {
-//        let btn = FBSDKLoginButton(type: UIButtonType.custom)
-//        btn.readPermissions = ["public_profile", "email", "user_friends"]
-//        btn.delegate = self
-//        btn.layer.cornerRadius = 10
-//        btn.layer.backgroundColor = UIColor.FlatColor.Blue.Blue6.cgColor
-//
-//        return btn
-//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,11 +75,6 @@ class LoginController: UIViewController {
         setupViews()
         setupNavBar()
         bind()
-        
-//        if let token = FBSDKAccessToken.current() {
-//            print("token: \(token.tokenString)")
-//            fetchProfile()
-//        }
         
     }
     
@@ -152,8 +138,10 @@ class LoginController: UIViewController {
                 UserDefaults.standard.set(true, forKey: "isSocial")
                 UserDefaults.standard.set("facebook", forKey: "platform")
                 UserDefaults.standard.set(fbToken, forKey: "accessToken")
+                
+                AppDelegateUtil.shared.showMainView()
 
-                self?.showMainViews()
+//                self?.showMainViews()
             }, onDisposed: {
                 
             }).disposed(by: disposeBag)
@@ -183,7 +171,7 @@ class LoginController: UIViewController {
     }
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "로그인"
+        navigationItem.title = NSLocalizedString("로그인", comment: "")
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         } else {
@@ -216,8 +204,22 @@ class LoginController: UIViewController {
             UserDefaults.standard.set(self?.profileViewModel?.thumbnail, forKey: "thumbnail")
         }, onError: { error in
             print(error.localizedDescription)
+            
+            let errored = error as NSError
+            
+            guard let message = errored.userInfo["message"] as? String else {return}
+            
+            let alert = UIAlertController(title: "오류", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
         }, onCompleted: {
-            self.showMainViews()
+            self.view.endEditing(true)
+            guard let window = AppDelegateUtil.shared.window else {return}
+            let sceneSwitcher = SceneSwitcher(window: window)
+            sceneSwitcher.mainView = MainView(sceneSwitcher: sceneSwitcher)
+            sceneSwitcher.presentMain()
+
         }) {
             
         }.disposed(by: disposeBag)
@@ -232,6 +234,8 @@ extension LoginController {
             self?.navigationController?.pushViewController(RegisterController(), animated: true)
             
         }).disposed(by: disposeBag)
+        
+        
         
         loginButton.rx.tap.asObservable().subscribe(onNext: { [weak self] _ in
             self?.fetchLogin()
@@ -342,5 +346,16 @@ extension UIColor {
         struct Blue {
             static let Blue6 = UIColor(netHex: 0x228be6)
         }
+    }
+}
+
+struct LoginView {
+    let sceneSwitcher: SceneSwitcherType
+    
+    func initiateViewController() -> UIViewController? {
+        let loginViewController = LoginController()
+        
+        let navigationController = UINavigationController(rootViewController: loginViewController)
+        return navigationController
     }
 }

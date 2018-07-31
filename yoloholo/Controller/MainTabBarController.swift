@@ -29,3 +29,14 @@ class MainTabBarController: UITabBarController {
 
 
 }
+
+
+struct MainView {
+    let sceneSwitcher: SceneSwitcherType
+    
+    func initiateViewController() -> UIViewController? {
+        let mainViewController = MainTabBarController()
+        
+        return mainViewController
+    }
+}

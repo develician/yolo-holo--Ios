@@ -63,29 +63,17 @@ class DayListController: UIViewController {
         }
     }
     
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        let offsetY = scrollView.contentOffset.y
-//        let contentHeight = scrollView.contentSize.height
-//        let scrollHeight = scrollView.frame.size.height
-//        guard let navBarHeight = self.navigationController?.navigationBar.frame.size.height else {
-//            return
-//        }
-//        if offsetY > navBarHeight && contentHeight > scrollHeight {
-//            self.navigationController?.setNavigationBarHidden(true, animated: true)
-//        } else {
-//            self.navigationController?.setNavigationBarHidden(false, animated: true)
-//        }
-//    }
-    
-
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupViews()
         setupNavBar()
         bind()
+        
+        guard let plan = self.plan else {
+            return
+        }
+        
         
        
     }
@@ -209,13 +197,16 @@ extension DayListController: UICollectionViewDelegateFlowLayout, UICollectionVie
             
         }
         let randomIndex = Int(arc4random_uniform(UInt32(self.fullImageList.count)))
-        cell.fullImageView.image = UIImage(named: self.fullImageList[randomIndex])
+        let targetImage = self.fullImageList[randomIndex]
+        cell.fullImageView.image = UIImage(named: targetImage)
+        
+        
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width, height: view.frame.size.height * 0.35)
+        return CGSize(width: collectionView.frame.size.width - 32, height: 300)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

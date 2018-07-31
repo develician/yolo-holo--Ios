@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import GoogleMaps
 import GooglePlacePicker
+import SnapKit
 
 class AddDetailController: UIViewController {
 
@@ -90,9 +91,12 @@ class AddDetailController: UIViewController {
     
     let googleMapButton: UIButton = {
         let btn = UIButton(type: .custom)
-        btn.setTitle("Google Map", for: UIControlState.normal)
-        btn.backgroundColor = UIColor.FlatColor.Gray.Gray6
+        btn.setTitle("위치 설정(구글맵)", for: UIControlState.normal)
+        btn.backgroundColor = UIColor.mainTextBlue
         btn.titleLabel?.textColor = .white
+        btn.layer.cornerRadius = 12
+        btn.clipsToBounds = true
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
         return btn
     }()
     
@@ -135,43 +139,65 @@ class AddDetailController: UIViewController {
         
         navigationItem.rightBarButtonItem = doneButton
         
-        let viewComponents = [scrollView]
+        let viewComponents = [destNameTextField, googleMapButton]
         viewComponents.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
-
         
-
-        let scrollViewComponents = [contentView]
-        scrollViewComponents.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            scrollView.addSubview($0)
+        destNameTextField.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(28)
+            } else {
+                make.top.equalTo(topLayoutGuide.snp.bottom).offset(28)
+            }
+            make.left.equalTo(view.snp.left).offset(28)
+            make.right.equalTo(view.snp.right).offset(-28)
         }
         
-        let contentViewComponents = [destNameTextField, googleMapButton, todoTitleLable, todoAddField, todoAddButton, todoTableView]
-        contentViewComponents.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview($0)
+        googleMapButton.snp.makeConstraints { (make) in
+            make.top.equalTo(destNameTextField.snp.bottom).offset(28)
+            make.left.equalTo(view.snp.left).offset(28)
+            make.right.equalTo(view.snp.right).offset(-28)
+            make.height.equalTo(32)
         }
         
-        scrollView.anchor(top: topLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
-        
-        contentView.anchor(top: scrollView.topAnchor, leading: scrollView.leadingAnchor, bottom: scrollView.bottomAnchor, trailing: scrollView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 1500))
-        
-        destNameTextField.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
-        
-        googleMapButton.anchor(top: destNameTextField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
-        
-        todoTitleLable.anchor(top: googleMapButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24))
-        todoAddField.anchor(top: todoTitleLable.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
-        todoAddButton.anchor(top: todoAddField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
-        
-        todoTableView.anchor(top: todoAddButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 56, right: 24))
+//        let viewComponents = [scrollView]
+//        viewComponents.forEach {
+//            $0.translatesAutoresizingMaskIntoConstraints = false
+//            view.addSubview($0)
+//        }
+//
+//
+//
+//        let scrollViewComponents = [contentView]
+//        scrollViewComponents.forEach {
+//            $0.translatesAutoresizingMaskIntoConstraints = false
+//            scrollView.addSubview($0)
+//        }
+//
+//        let contentViewComponents = [destNameTextField, googleMapButton, todoTitleLable, todoAddField, todoAddButton, todoTableView]
+//        contentViewComponents.forEach {
+//            $0.translatesAutoresizingMaskIntoConstraints = false
+//            contentView.addSubview($0)
+//        }
+//
+//        scrollView.anchor(top: topLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
+//
+//        contentView.anchor(top: scrollView.topAnchor, leading: scrollView.leadingAnchor, bottom: scrollView.bottomAnchor, trailing: scrollView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 1500))
+//
+//        destNameTextField.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
+//
+//        googleMapButton.anchor(top: destNameTextField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
+//
+//        todoTitleLable.anchor(top: googleMapButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 0, right: 24))
+//        todoAddField.anchor(top: todoTitleLable.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24))
+//        todoAddButton.anchor(top: todoAddField.bottomAnchor, leading: contentView.leadingAnchor, bottom: nil, trailing: contentView.trailingAnchor, padding: .init(top: 16, left: 24, bottom: 0, right: 24), size: .init(width: 0, height: 32))
+//
+//        todoTableView.anchor(top: todoAddButton.bottomAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 24, left: 24, bottom: 56, right: 24))
     }
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "상세 일정 추가"
+        navigationItem.title = "목적지 추가"
         
         navigationController?.navigationBar.backgroundColor = .yellow
         navigationController?.navigationBar.isTranslucent = false
@@ -213,9 +239,13 @@ extension AddDetailController {
             
             guard let destName = self?.destNameTextField.text, destName.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else {return}
             
-            guard let latitude = self?.googleLatitude, let longitude = self?.googleLongitude, let placeId = self?.googlePlaceId else {return}
+            
+            
             guard let todoList = self?.todoList else {return}
             guard let googleMapEnabled = self?.googleMapEnabled else {return}
+            
+            print("googleMapEnabled: \(googleMapEnabled)")
+            
             guard let disposeBag = self?.disposeBag else {return}
             
             guard let isUpdate = self?.isUpdate else {return}
@@ -223,37 +253,59 @@ extension AddDetailController {
             
             if isUpdate {
                 guard let id = self?._id else {return}
-                DetailPlanService.shared.fetchUpdate(id: id, destName: destName, latitude: latitude, longitude: longitude, placeId: placeId, todoList: todoList).subscribe(onNext: { [weak self] (respJSON) in
-//                    let detailPlan: DetailPlan = DetailPlan(json: respJSON)
-//                    let detailPlanViewModel = DetailPlanViewModel(detailPlan: detailPlan)
-//                    let dest = ReadDetailPlanController()
-//                    dest.detailPlanViewModel = detailPlanViewModel
-//                    self?.navigationController.pop
-                }, onError: { (error) in
-                    print(error.localizedDescription)
-                }, onCompleted: {
-//                    let dest = DetailPlanController()
-                    guard let viewControllers = self?.navigationController?.viewControllers else {return}
-//                    print()
-                    self?.navigationController?.popToViewController(viewControllers[2], animated: true)
-                }, onDisposed: {
-                    
-                }).disposed(by: disposeBag)
+                if googleMapEnabled {
+                    guard let latitude = self?.googleLatitude, let longitude = self?.googleLongitude, let placeId = self?.googlePlaceId else {return}
+                    DetailPlanService.shared.fetchUpdate(id: id, destName: destName, latitude: latitude, longitude: longitude, placeId: placeId, todoList: todoList).subscribe(onNext: { (respJSON) in
+                        print(respJSON)
+                    }, onError: { (error) in
+                        print(error.localizedDescription)
+                    }, onCompleted: {
+                        guard let viewControllers = self?.navigationController?.viewControllers else {return}
+                        self?.navigationController?.popToViewController(viewControllers[2], animated: true)
+                    }, onDisposed: {
+                        
+                    }).disposed(by: disposeBag)
+                } else {
+                    DetailPlanService.shared.fetchUpdate(id: id, destName: destName, latitude: nil, longitude: nil, placeId: nil, todoList: todoList).subscribe(onNext: { (respJSON) in
+                        print(respJSON)
+                    }, onError: { (error) in
+                        print(error.localizedDescription)
+                    }, onCompleted: {
+                        guard let viewControllers = self?.navigationController?.viewControllers else {return}
+                        self?.navigationController?.popToViewController(viewControllers[2], animated: true)
+                    }, onDisposed: {
+                        
+                    }).disposed(by: disposeBag)
+                }
             } else {
                 guard let planId = self?.planId else {return}
                 guard let username = UserDefaults.standard.string(forKey: "username") else {return}
                 
                 guard let day = self?.day else {return}
                 
-                DetailPlanService.shared.fetchCreate(planId: planId, username: username, day: day, destName: destName, latitude: latitude, longitude: longitude, placeId: placeId, todoList: todoList, googleMapEnabled: googleMapEnabled).subscribe(onNext: { (respJSON) in
+                if googleMapEnabled {
+                    guard let latitude = self?.googleLatitude, let longitude = self?.googleLongitude, let placeId = self?.googlePlaceId else {return}
                     
-                }, onError: { (error) in
-                    print(error.localizedDescription)
-                }, onCompleted: {
-                    self?.navigationController?.popViewController(animated: true)
-                }, onDisposed: {
-                    
-                }).disposed(by: disposeBag)
+                    DetailPlanService.shared.fetchCreate(planId: planId, username: username, day: day, destName: destName, latitude: latitude, longitude: longitude, placeId: placeId, todoList: todoList, googleMapEnabled: googleMapEnabled).subscribe(onNext: { (respJSON) in
+                        print(respJSON)
+                    }, onError: { (error) in
+                        print(error.localizedDescription)
+                    }, onCompleted: {
+                        self?.navigationController?.popViewController(animated: true)
+                    }, onDisposed: {
+                        
+                    }).disposed(by: disposeBag)
+                } else {
+                    DetailPlanService.shared.fetchCreate(planId: planId, username: username, day: day, destName: destName, latitude: nil, longitude: nil, placeId: nil, todoList: todoList, googleMapEnabled: googleMapEnabled).subscribe(onNext: { (respJSON) in
+                        print(respJSON)
+                    }, onError: { (error) in
+                        print(error.localizedDescription)
+                    }, onCompleted: {
+                        self?.navigationController?.popViewController(animated: true)
+                    }, onDisposed: {
+                        
+                    }).disposed(by: disposeBag)
+                }
             }
         }).disposed(by: disposeBag)
     }

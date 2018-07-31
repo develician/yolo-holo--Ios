@@ -16,8 +16,8 @@ class PlanService: NSObject {
     static let shared = PlanService()
     
     func fetchCreatePlan(username: String?, title: String?, departDate: String?, arriveDate: String?, numberOfDays: Int?, selectedDateArray: [String]?) -> Observable<JSON> {
-        guard let url = URL(string: "http://192.168.0.23:4000/api/plan") else {return Observable.empty()}
-        
+//        guard let url = URL(string: "http://13.209.99.24/api/plan") else {return Observable.empty()}
+        guard let url = PlanAPI.createPlan.url else {return Observable.empty()}
         guard let username = username else {return Observable.empty()}
         guard let title = title else {return Observable.empty()}
         guard let departDate = departDate else {return Observable.empty()}
@@ -63,8 +63,8 @@ class PlanService: NSObject {
     
     func fetchPlanList(username: String?) -> Observable<JSON> {
         guard let username = username else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/plan/\(username)") else {return Observable.empty()}
-        
+//        guard let url = URL(string: "http://13.209.99.24/api/plan/\(username)") else {return Observable.empty()}
+        guard let url = PlanAPI.planList(username: username).url else {return Observable.empty()}
         return Observable.create({ observer -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { resp in
                 switch resp.result {
@@ -94,8 +94,8 @@ class PlanService: NSObject {
     
     func fetchRemovePlan(id: String?) -> Observable<JSON> {
         guard let id = id else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/plan/\(id)") else {return Observable.empty()}
-        
+//        guard let url = URL(string: "http://13.209.99.24/api/plan/\(id)") else {return Observable.empty()}
+        guard let url = PlanAPI.removePlan(id: id).url else {return Observable.empty()}
         return Observable.create({ (observer) -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.delete, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {
@@ -125,7 +125,8 @@ class PlanService: NSObject {
     
     func fetchUpdatePlan(id: String?, departDate: String?, arriveDate: String?, numberOfDays: Int?, selectedDateArray: [String]?) -> Observable<JSON> {
         guard let id = id else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/plan/\(id)") else {return Observable.empty()}
+//        guard let url = URL(string: "http://13.209.99.24/api/plan/\(id)") else {return Observable.empty()}
+        guard let url = PlanAPI.updatePlan(id: id).url else {return Observable.empty()}
         guard let departDate = departDate else {return Observable.empty()}
         guard let arriveDate = arriveDate else {return Observable.empty()}
         guard let numberOfDays = numberOfDays else {return Observable.empty()}

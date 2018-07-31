@@ -118,8 +118,10 @@ class SettingViewController: UIViewController {
             UserDefaults.standard.set(nil, forKey: "platform")
             UserDefaults.standard.set(nil, forKey: "accessToken")
             
-            let desc = CustomNavigationController(rootViewController: LoginController())
-            self.present(desc, animated: true, completion: nil)
+            AppDelegateUtil.shared.showAuthView()
+            
+//            let desc = CustomNavigationController(rootViewController: LoginController())
+//            self.present(desc, animated: true, completion: nil)
         }) {
             print("logout observable disposed")
         }.disposed(by: disposeBag)
@@ -159,8 +161,8 @@ extension SettingViewController {
                 }).disposed(by: disposeBag)
             }).disposed(by: disposeBag)
         } else {
-            guard let url = URL(string: "http://192.168.0.23:4000\(thumbnailPath)") else {return}
-            
+//            guard let url = URL(string: "http://13.209.99.24\(thumbnailPath)") else {return}
+            guard let url = ProfileAPI.getProfileImage(thumbnailPath: thumbnailPath).url else {return}
             Observable.just(url).subscribe(onNext: { [weak self] (imageUrl) in
                 self?.view.isUserInteractionEnabled = false
                 guard let disposeBag = self?.disposeBag else {return}
@@ -210,7 +212,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         if isSocial {
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "로그아웃"
+                cell.textLabel?.text = NSLocalizedString("logout", comment: "")
                 break
             default:
                 break
@@ -221,7 +223,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.textLabel?.text = "계정 설정"
                 break
             case 1:
-                cell.textLabel?.text = "로그아웃"
+                cell.textLabel?.text = NSLocalizedString("로그아웃", comment: "")
                 break
             default:
                 break

@@ -82,7 +82,7 @@ class RegisterController: UIViewController {
     }
     
     fileprivate func setupNavBar() {
-        navigationItem.title = "회원가입"
+        navigationItem.title = NSLocalizedString("회원가입", comment: "")
         if #available(iOS 11.0, *) {
             navigationController?.navigationBar.prefersLargeTitles = true
         } else {
@@ -119,9 +119,20 @@ class RegisterController: UIViewController {
 
             
         }, onError: { error in
-            print(error.localizedDescription)
+            let errored = error as NSError
+            guard let message = errored.userInfo["message"] as? String else {return}
+            
+            let alert = UIAlertController(title: "오류", message: message, preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
         }, onCompleted: {
-            self.showMainViews()
+            self.view.endEditing(true)
+            guard let window = AppDelegateUtil.shared.window else {return}
+            let sceneSwitcher = SceneSwitcher(window: window)
+            sceneSwitcher.mainView = MainView(sceneSwitcher: sceneSwitcher)
+            sceneSwitcher.presentMain()
+
             
         }) { 
 //            NotificationCenter.default.post(name: NSNotification.Name.RegisterSuccess, object: nil, userInfo: ["isSuccess" : true])

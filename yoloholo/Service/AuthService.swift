@@ -6,7 +6,7 @@
 //  Copyright © 2018년 killi8n. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import RxCocoa
 import RxSwift
 import Alamofire
@@ -19,7 +19,7 @@ class AuthService: NSObject {
         guard let email = email else {return Observable.empty()}
         guard let username = username else {return Observable.empty()}
         guard let password = password else {return Observable.empty()}
-        
+        guard let url = AuthAPI.register.url else {return Observable.empty()}
         return Observable.create({ observer -> Disposable in
             let body: [String: Any] = [
                 "username": username,
@@ -27,12 +27,10 @@ class AuthService: NSObject {
                 "email": email
             ]
             
-            let urlString = "http://192.168.0.23:4000/api/auth/register"
-            
-            let url = URL(string: urlString)
             
             
-            let request = Alamofire.request(url!, method: HTTPMethod.post, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
+            
+            let request = Alamofire.request(url, method: HTTPMethod.post, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {
                 case .success(let value):
                     if let statusCode = resp.response?.statusCode, statusCode == 200 {
@@ -40,12 +38,51 @@ class AuthService: NSObject {
                         observer.onNext(responseJSON)
                         observer.onCompleted()
                     } else {
-                        observer.onError(NSError(domain: "register", code: 200, userInfo: nil))
+                        guard let statusCode = resp.response?.statusCode else {return}
+                        if let data = resp.data {
+                            let errorData = JSON(data)
+                            
+                            if statusCode == 400 {
+                                guard var message = errorData["message"].string else {
+                                    return
+                                }
+                                
+                                message = NSLocalizedString(message, comment: "")
+                                
+                                observer.onError(NSError(domain: "register", code: 200, userInfo: ["message": message]))
+                            }
+                            
+                            if statusCode == 409 {
+                                guard let key = errorData["key"].string else {return}
+                                if key == "email" {
+                                    let message = NSLocalizedString("이미 가입된 이메일입니다.", comment: "")
+                                    observer.onError(NSError(domain: "register", code: 200, userInfo: ["message": message]))
+                                }
+                                
+                                if key == "username" {
+                                    let message = NSLocalizedString("이미 가입된 닉네임입니다.", comment: "")
+                                    observer.onError(NSError(domain: "register", code: 200, userInfo: ["message": message]))
+                                }
+                                
+                            }
+                            
+                            if statusCode == 500 {
+                                let message = NSLocalizedString("인터넷 연결을 확인해주세요.", comment: "")
+                                observer.onError(NSError(domain: "register", code: 200, userInfo: ["message": message]))
+                                
+                            }
+                        }
+                        
+                        
+                        
                     }
                     break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    observer.onError(NSError(domain: "register", code: 100, userInfo: nil))
+                case .failure(_):
+                    observer.onError(NSError(domain: "register", code: 100, userInfo: ["message": "Check Internet Connection"]))
+                    //                    guard let statusCode = resp.response?.statusCode else {return}
+                    //                    if let data = resp.data {
+                    //                        print("error data: \(data)")
+                    //                    }
                     break
                 }
             })
@@ -63,9 +100,7 @@ class AuthService: NSObject {
         guard let password = password else {return Observable.empty()}
         
         
-        guard let url = URL(string: "http://192.168.0.23:4000/api/auth/login") else {
-            return Observable.empty()
-        }
+         guard let url = AuthAPI.login.url else {return Observable.empty()}
         
         let body: [String: Any] = [
             "email": email,
@@ -85,9 +120,15 @@ class AuthService: NSObject {
                         observer.onError(NSError(domain: "login", code: 200, userInfo: nil))
                     }
                     break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    observer.onError(NSError(domain: "login", code: 100, userInfo: nil))
+                case .failure(_):
+                    guard let statusCode = resp.response?.statusCode else {return}
+                    if statusCode == 403 || statusCode == 400 {
+                        observer.onError(NSError(domain: "login", code: 100, userInfo: ["message" : "정확한 아이디 혹은 비밀번호를 입력해주세요."]))
+                    }
+                    if statusCode == 500 {
+                        observer.onError(NSError(domain: "login", code: 100, userInfo: ["message" : "알수없는 오류가 발생했습니다. 다시 시도해주세요."]))
+                    }
+                    
                     break
                 }
             })
@@ -99,7 +140,8 @@ class AuthService: NSObject {
     }
     
     func fetchLogout() -> Observable<JSON>{
-        guard let url = URL(string: "http://192.168.0.23:4000/api/auth/logout") else {return Observable.empty()}
+        guard let url = AuthAPI.logout.url else {return Observable.empty()}
+        
         return Observable.create({ observer -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.post, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON { resp in
                 switch resp.result {
@@ -127,7 +169,7 @@ class AuthService: NSObject {
     
     func fetchProfile(username: String?) -> Observable<JSON> {
         guard let username = username else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/auth/profile/\(username)") else {return Observable.empty()}
+        guard let url = AuthAPI.profile(username: username).url else {return Observable.empty()}
         
         return Observable.create({ observer -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { resp in
@@ -157,7 +199,7 @@ class AuthService: NSObject {
     func fetchChangePassword(password: String?, username: String?) -> Observable<JSON> {
         guard let password = password else {return Observable.empty()}
         guard let username = username else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/auth") else {return Observable.empty()}
+        guard let url = AuthAPI.changePassword.url else {return Observable.empty()}
         let body: [String: Any] = [
             "password": password,
             "username": username
@@ -203,8 +245,8 @@ class AuthService: NSObject {
             "fbName": fbName,
             "socialKey": socialKey
         ]
-
-        guard let url = URL(string: "http://192.168.0.23:4000/api/auth/facebook") else {return Observable.empty()}
+        
+        guard let url = AuthAPI.facebook.url else {return Observable.empty()}
         
         return Observable.create({ (observer) -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.post, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
@@ -229,9 +271,9 @@ class AuthService: NSObject {
                 request.cancel()
             }
         })
-
+        
     }
-  
+    
 }
 
 

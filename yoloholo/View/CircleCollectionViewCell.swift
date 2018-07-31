@@ -7,10 +7,20 @@
 //
 
 import UIKit
-
+import GoogleMaps
+import GooglePlaces
+import GooglePlacePicker
 
 class CircleCollectionViewCell: UICollectionViewCell {
     
+    var placeViewModel: DetailPlanViewModel! {
+        didSet {
+            
+            getGooglePlaceImage(placeId: placeViewModel.placeId)
+            
+            destNameLabel.text = placeViewModel.destName
+        }
+    }
     
     let placeImageView: UIImageView = {
         let iv = UIImageView()
@@ -31,7 +41,7 @@ class CircleCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupContentView()
-        
+
 
     }
     
@@ -63,4 +73,37 @@ class CircleCollectionViewCell: UICollectionViewCell {
     }
     
     
+}
+
+extension CircleCollectionViewCell {
+    func getGooglePlaceImage(placeId: String?) {
+        guard let placeId = placeId else {
+            DispatchQueue.main.async {
+                self.placeImageView.image = nil
+            }
+            return
+            
+        }
+        GMSPlacesClient.shared().lookUpPhotos(forPlaceID: placeId) { (photos, error) -> Void in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+            } else {
+                if let firstPhoto = photos?.results.first {
+                    GMSPlacesClient.shared().loadPlacePhoto(firstPhoto, callback: {
+                        (photo, error) -> Void in
+                        
+                        if let error = error {
+                            
+                            print("Error: \(error.localizedDescription)")
+                        }
+                        else {
+                            DispatchQueue.main.async {
+                                self.placeImageView.image = photo
+                            }
+                        }
+                    })
+                }
+            }
+        }
+    }
 }

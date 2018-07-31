@@ -18,9 +18,9 @@ struct DetailPlan {
     let destName: String
     let username: String
     
-    let latitude: Double
-    let longitude: Double
-    let placeId: String
+    var latitude: Double?
+    var longitude: Double?
+    var placeId: String?
     let todoList: [JSON]
     
     init(json: JSON) {
@@ -31,9 +31,18 @@ struct DetailPlan {
         guard let destNameJSON = json["destName"].string else {fatalError("parsing Error")}
         guard let usernameJSON = json["username"].string else {fatalError("parsing Error")}
         
-        guard let latitudeJSON = json["latitude"].double else {fatalError("parsing Error")}
-        guard let longitudeJSON = json["longitude"].double else {fatalError("parsing Error")}
-        guard let placeIdJSON = json["placeId"].string else {fatalError("parsing Error")}
+//        guard let latitudeJSON = json["latitude"].double ?? nil else {fatalError("parsing Error")}
+        if let latitudeJSON = json["latitude"].double, let longitudeJSON = json["longitude"].double, let placeIdJSON = json["placeId"].string {
+            self.latitude = latitudeJSON
+            self.longitude = longitudeJSON
+            self.placeId = placeIdJSON
+        } else {
+            self.latitude = nil
+            self.longitude = nil
+            self.placeId = nil
+        }
+//        guard let longitudeJSON = json["longitude"].double ?? nil else {fatalError("parsing Error")}
+//        guard let placeIdJSON = json["placeId"].string ?? nil else {fatalError("parsing Error")}
         guard let todoListJSON = json["todoList"].array else {fatalError("parsing Error")}
 
         self._id = _idJSON
@@ -43,9 +52,7 @@ struct DetailPlan {
         self.destName = destNameJSON
         self.username = usernameJSON
         
-        self.latitude = latitudeJSON
-        self.longitude = longitudeJSON
-        self.placeId = placeIdJSON
+        
         self.todoList = todoListJSON
     }
 }

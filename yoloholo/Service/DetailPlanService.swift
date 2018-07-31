@@ -22,8 +22,7 @@ class DetailPlanService: NSObject {
         guard let day = day else {return Observable.empty()}
         
         
-        guard let url = URL(string: "http://192.168.0.23:4000/api/detailPlan/\(planId)/\(day)") else {return Observable.empty()}
-        
+        guard let url = DetailPlanAPI.read(planId: planId, day: day).url else {return Observable.empty()}
         return Observable.create({ (observer) -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.get, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {
@@ -54,28 +53,50 @@ class DetailPlanService: NSObject {
         guard let username = username else {return Observable.empty()}
         guard let destName = destName else {return Observable.empty()}
         guard let day = day else {return Observable.empty()}
-        guard let latitude = latitude else {return Observable.empty()}
-        guard let longitude = longitude else {return Observable.empty()}
-        guard let placeId = placeId else {return Observable.empty()}
         guard let todoList = todoList else {return Observable.empty()}
+        
         guard let googleMapEnabled = googleMapEnabled else {return Observable.empty()}
-
-        let body: [String: Any] = [
+        
+        var body: [String : Any]?
+        if googleMapEnabled {
+            guard let latitude = latitude else {return Observable.empty()}
+            guard let longitude = longitude else {return Observable.empty()}
+            guard let placeId = placeId else {return Observable.empty()}
+            
+            body = [
+                "planId": planId,
+                "username": username,
+                "day": day,
+                "destName": destName,
+                "latitude": latitude,
+                "longitude": longitude,
+                "placeId": placeId,
+                "todoList": todoList,
+                "googleMapEnabled": googleMapEnabled
+            ]
+        } else {
+            body = [
             "planId": planId,
             "username": username,
             "day": day,
             "destName": destName,
-            "latitude": latitude,
-            "longitude": longitude,
-            "placeId": placeId,
             "todoList": todoList,
             "googleMapEnabled": googleMapEnabled
-        ]
+            ]
+        }
         
-        guard let url = URL(string: "http://192.168.0.23:4000/api/detailPlan") else {return Observable.empty()}
         
+        
+
+        
+
+        
+        
+        guard let url = DetailPlanAPI.create.url else {return Observable.empty()}
+        guard let postBody = body else {return Observable.empty()}
         return Observable.create({ (observer) -> Disposable in
-            let request = Alamofire.request(url, method: HTTPMethod.post, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
+            
+            let request = Alamofire.request(url, method: HTTPMethod.post, parameters: postBody, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {
                 case .success(let value):
                     if let statusCode = resp.response?.statusCode, statusCode == 201 {
@@ -101,7 +122,7 @@ class DetailPlanService: NSObject {
     
     func fetchRemove(id: String?) -> Observable<JSON> {
         guard let id = id else {return Observable.empty()}
-        guard let url = URL(string: "http://192.168.0.23:4000/api/detailPlan/\(id)") else {return Observable.empty()}
+        guard let url = DetailPlanAPI.remove(id: id).url else {return Observable.empty()}
         
         return Observable.create({ (observer) -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.delete, parameters: nil, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
@@ -140,8 +161,7 @@ class DetailPlanService: NSObject {
             "todoList": todoList
         ]
         
-        guard let url = URL(string: "http://192.168.0.23:4000/api/detailPlan/\(id)") else {return Observable.empty()}
-        
+        guard let url = DetailPlanAPI.update(id: id).url else {return Observable.empty()}
         return Observable.create({ (observer) -> Disposable in
             let request = Alamofire.request(url, method: HTTPMethod.patch, parameters: body, encoding: URLEncoding.default, headers: nil).responseJSON(completionHandler: { (resp) in
                 switch resp.result {

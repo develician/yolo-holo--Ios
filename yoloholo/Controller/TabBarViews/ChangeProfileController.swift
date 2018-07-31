@@ -337,7 +337,7 @@ extension ChangeProfileController: UIImagePickerControllerDelegate, UINavigation
         guard let username = UserDefaults.standard.string(forKey: "username") else {
             return
         }
-        guard let url = URL(string: "http://192.168.0.23:4000/api/user/profile/\(username)") else {
+        guard let url = URL(string: "http://13.209.99.24/api/user/profile/\(username)") else {
             return
         }
         
@@ -365,9 +365,13 @@ extension ChangeProfileController: UIImagePickerControllerDelegate, UINavigation
                             
                             UserDefaults.standard.set("/static/images/\(filename)", forKey: "thumbnail")
                             
-                            guard let url = URL(string: "http://192.168.0.23:4000/static/images/\(filename)") else {
-                                return
-                            }
+//                            guard let url = URL(string: "\(ProfileAPI)/static/images/\(filename)") else {
+//                                return
+//                            }
+                            
+                            guard let url = ProfileAPI.pickedImage(filename: filename).url else {return}
+                            
+                            
                             
                             guard let disposeBag = self?.disposeBag else {
                                 return

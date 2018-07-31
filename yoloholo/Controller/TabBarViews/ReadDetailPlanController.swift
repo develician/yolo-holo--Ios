@@ -12,13 +12,16 @@ import GooglePlaces
 import GooglePlacePicker
 import RxSwift
 import RxCocoa
+import SnapKit
 
-class ReadDetailPlanController: UIViewController {
+class ReadDetailPlanController: UITableViewController {
     
     let disposeBag: DisposeBag = DisposeBag()
     
-    let cellId: String = "cellId"
-    
+    let placeImageCellId: String = "placeImageCellId"
+    let stackViewCellId: String = "stackViewCellId"
+    let todoButtonCellId: String = "todoButtonCellId"
+
     var detailPlanViewModel: DetailPlanViewModel?
     
     var nextLatitude: Double?
@@ -66,16 +69,7 @@ class ReadDetailPlanController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 24, weight: UIFont.Weight.semibold)
         return label
     }()
-    
-    lazy var todoTableView: UITableView = {
-        let tv = UITableView()
-        tv.backgroundColor = .white
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
-        tv.delegate = self
-        tv.dataSource = self
-        tv.tableFooterView = UIView()
-        return tv
-    }()
+
     
     let googleMapLabel: UILabel = {
         let label = UILabel()
@@ -123,6 +117,7 @@ class ReadDetailPlanController: UIViewController {
         return sv
     }()
     
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         DispatchQueue.main.async {
@@ -139,7 +134,8 @@ class ReadDetailPlanController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.getPlaceImage()
-        setupViews()
+        self.navigationItem.rightBarButtonItem = updateButton
+        setupTableview()
         setupNavBar()
         bind()
         
@@ -147,43 +143,122 @@ class ReadDetailPlanController: UIViewController {
 
     }
     
-    fileprivate func setupViews() {
-        view.backgroundColor = .white
-        
-        navigationItem.rightBarButtonItem = updateButton
-        
-        let viewComponents = [scrollView]
-        viewComponents.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
-        
-        let scrollViewComponents = [placeImageView, todoLabel, todoTableView, googleMapLabel, buttonStackView]
-        scrollViewComponents.forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            scrollView.addSubview($0)
-        }
-        
-        
-        scrollView.anchor(top: topLayoutGuide.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
-        
-        
-        placeImageView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 24).isActive = true
-        placeImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-        placeImageView.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        placeImageView.heightAnchor.constraint(equalToConstant: 300).isActive = true
-        
-        todoLabel.anchor(top: placeImageView.bottomAnchor, leading: scrollView.leadingAnchor, bottom: nil, trailing: scrollView.trailingAnchor, padding: .init(top: 24, left: 16, bottom: 0, right: 16), size: .init(width: 0, height: 32))
-        
-        todoTableView.anchor(top: todoLabel.bottomAnchor, leading: scrollView.leadingAnchor, bottom: nil, trailing: scrollView.trailingAnchor, padding: .init(top: 16, left: 0, bottom: 0, right: 0), size: .init(width: view.frame.size.width, height: 150))
-        
-        googleMapLabel.anchor(top: todoTableView.bottomAnchor, leading: scrollView.leadingAnchor, bottom: nil, trailing: scrollView.trailingAnchor, padding: .init(top: 24, left: 16, bottom: 0, right: 16), size: .init(width: 0, height: 32))
-        
-        buttonStackView.anchor(top: googleMapLabel.bottomAnchor, leading: view.leadingAnchor, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 16, left: 16, bottom: 0, right: 16), size: .init(width: 0, height: 32))
-        
-        
+    fileprivate func setupTableview() {
+        tableView.register(PlaceImageCell.self, forCellReuseIdentifier: placeImageCellId)
+        tableView.register(StackViewTableViewCell.self, forCellReuseIdentifier: stackViewCellId)
+        tableView.register(TodoButtonTableViewCell.self, forCellReuseIdentifier: todoButtonCellId)
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        tableView.separatorColor = .mainTextBlue
+        tableView.backgroundColor = UIColor.rgb(r: 12, g: 47, b: 57)
+//        tableView.rowHeight = UITableViewAutomaticDimension
+//        tableView.estimatedRowHeight = 500
+        tableView.tableFooterView = UIView()
     }
     
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: placeImageCellId, for: indexPath) as! PlaceImageCell
+            if let detailPlan = self.detailPlanViewModel, let placeId = detailPlan.placeId  {
+                GMSPlacesClient.shared().lookUpPhotos(forPlaceID: placeId) { (photos, error) -> Void in
+                    if let error = error {
+                        print("Error: \(error.localizedDescription)")
+                    } else {
+                        if let firstPhoto = photos?.results.first {
+                            GMSPlacesClient.shared().loadPlacePhoto(firstPhoto, callback: {
+                                (photo, error) -> Void in
+                                if let error = error {
+
+                                    print("Error: \(error.localizedDescription)")
+                                }
+                                else {
+                                    DispatchQueue.main.async {
+                                        cell.placeImageView.image = photo
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            }
+            return cell
+        }
+        
+        if indexPath.section == 1
+        {
+            let cell = tableView.dequeueReusableCell(withIdentifier: stackViewCellId, for: indexPath) as! StackViewTableViewCell
+            if let nextLatitude = self.nextLatitude, let nextLongitude = self.nextLongitude {
+                
+                cell.nextLatitude = nextLatitude
+                cell.nextLongitude = nextLongitude
+                cell.arriveButton.addTarget(self, action: #selector(openGoogleMapArrive), for: UIControlEvents.touchUpInside)
+                cell.departButton.addTarget(self, action: #selector(openGoogleMapDepart), for: UIControlEvents.touchUpInside)
+                cell.nextDestButton.addTarget(self, action: #selector(openGoogleMapNext), for: UIControlEvents.touchUpInside)
+
+            }
+            return cell
+        }
+        
+        if indexPath.section == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: todoButtonCellId, for: indexPath) as! TodoButtonTableViewCell
+            return cell
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId")!
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 2 {
+            
+            let dest = TodoTableViewController()
+            if let todoList = self.detailPlanViewModel?.todoList, let planId = self.detailPlanViewModel?._id {
+//                dest.todoList = todoList
+                dest.planId = planId
+            }
+            self.navigationController?.pushViewController(dest, animated: true)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 0:
+            return 250
+        case 1:
+            return 80
+        case 2:
+            return 80
+        default:
+            return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "장소 이미지"
+        }
+        if section == 1 {
+            return "구글맵 연동"
+        }
+        if section == 2 {
+            return "Todo List"
+        }
+        
+        return nil
+    }
+    
+
+
     fileprivate func setupNavBar() {
         guard let detailPlan = self.detailPlanViewModel else {return}
         
@@ -215,7 +290,13 @@ class ReadDetailPlanController: UIViewController {
 
 extension ReadDetailPlanController {
     func getPlaceImage() {
-        guard let placeId = self.detailPlanViewModel?.placeId else {return}
+        guard let placeId = self.detailPlanViewModel?.placeId else {
+            DispatchQueue.main.async {
+                self.placeImageView.removeFromSuperview()
+            }
+            return
+
+        }
         GMSPlacesClient.shared().lookUpPhotos(forPlaceID: placeId) { (photos, error) -> Void in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -231,8 +312,6 @@ extension ReadDetailPlanController {
                             DispatchQueue.main.async {
                                 self.placeImageView.image = photo
                             }
-                            
-                            
                         }
                     })
                 }
@@ -296,6 +375,174 @@ extension ReadDetailPlanController {
         nextDestButton.rx.tap.subscribe(onNext: { [weak self] _ in
             self?.openGoogleMap(category: "next")
         }).disposed(by: disposeBag)
+    }
+
+    
+    @objc func openGoogleMapArrive() {
+        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+
+            guard let latitude = self.detailPlanViewModel?.latitude else {
+                return
+            }
+            guard let longitude = self.detailPlanViewModel?.longitude else {
+                return
+            }
+            
+            guard let url = URL(string: "comgooglemaps://?saddr=&daddr=\(latitude),\(longitude)&directionsmode=transit") else {
+                return
+            }
+            
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+            
+
+            
+        } else {
+            let alert = UIAlertController(title: "앗!", message: "구글맵을 설치해주세요!", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "설치하러가기", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                guard let appStoreUrl = URL(string: "itms-apps://itunes.apple.com/app/id585027354") else {
+                    return
+                }
+                
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appStoreUrl)
+                }
+            }))
+            
+            alert.addAction(UIAlertAction(title: "취소", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                
+                
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    @objc func openGoogleMapDepart() {
+        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+            
+            guard let latitude = self.detailPlanViewModel?.latitude else {
+                return
+            }
+            guard let longitude = self.detailPlanViewModel?.longitude else {
+                return
+            }
+            
+            guard let url = URL(string: "comgooglemaps://?saddr=\(latitude),\(longitude)&daddr=&directionsmode=transit") else {
+                return
+            }
+            
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+            
+            
+            
+        } else {
+            let alert = UIAlertController(title: "앗!", message: "구글맵을 설치해주세요!", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "설치하러가기", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                guard let appStoreUrl = URL(string: "itms-apps://itunes.apple.com/app/id585027354") else {
+                    return
+                }
+                
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appStoreUrl)
+                }
+            }))
+            
+            alert.addAction(UIAlertAction(title: "취소", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                
+                
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+    }
+    
+    @objc func openGoogleMapNext() {
+        print("next tapped")
+        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+            
+            guard let latitude = self.detailPlanViewModel?.latitude else {
+                return
+            }
+            guard let longitude = self.detailPlanViewModel?.longitude else {
+                return
+            }
+            
+            guard let nextLatitude = self.nextLatitude else {
+                let alert = UIAlertController(title: "마지막 목적지", message: "마지막 목적지 입니다.", preferredStyle: UIAlertControllerStyle.alert)
+                
+                
+                alert.addAction(UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                    
+                    
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            guard let nextLongitude = self.nextLongitude else {
+                let alert = UIAlertController(title: "마지막 목적지", message: "마지막 목적지 입니다.", preferredStyle: UIAlertControllerStyle.alert)
+                
+                
+                alert.addAction(UIAlertAction(title: "확인", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                    
+                    
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            
+            guard let url = URL(string: "comgooglemaps://?saddr=\(latitude),\(longitude)&daddr=\(nextLatitude),\(nextLongitude)&directionsmode=transit") else {
+                return
+            }
+            
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+            
+            
+            
+        } else {
+            let alert = UIAlertController(title: "앗!", message: "구글맵을 설치해주세요!", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "설치하러가기", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                guard let appStoreUrl = URL(string: "itms-apps://itunes.apple.com/app/id585027354") else {
+                    return
+                }
+                
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appStoreUrl)
+                }
+            }))
+            
+            alert.addAction(UIAlertAction(title: "취소", style: UIAlertActionStyle.default, handler: { (alertActions) in
+                
+                
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }
+        
     }
     
     @objc func openGoogleMap(category: String?) {
@@ -388,23 +635,61 @@ extension ReadDetailPlanController {
     
     
 }
+//
+//extension ReadDetailPlanController: UITableViewDataSource, UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//
+//        return 1
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! ReadDetailTableViewCell
+//
+//        switch indexPath.section {
+//        case 0:
+//            if let detailPlan = self.detailPlanViewModel, let placeId = detailPlan.placeId  {
+//                GMSPlacesClient.shared().lookUpPhotos(forPlaceID: placeId) { (photos, error) -> Void in
+//                    if let error = error {
+//                        print("Error: \(error.localizedDescription)")
+//                    } else {
+//                        if let firstPhoto = photos?.results.first {
+//                            GMSPlacesClient.shared().loadPlacePhoto(firstPhoto, callback: {
+//                                (photo, error) -> Void in
+//                                if let error = error {
+//
+//                                    print("Error: \(error.localizedDescription)")
+//                                }
+//                                else {
+//                                    DispatchQueue.main.async {
+//                                        cell.placeImageView.image = photo
+//                                    }
+//                                }
+//                            })
+//                        }
+//                    }
+//                }
+//            }
+//            break
+//        case 1:
+//
+//            break
+//        case 2:
+//
+//            break
+//        default:
+//            break
+//        }
+//
+//        return cell
+//    }
+//
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return 3
+//    }
+//
+//
+//
+//
+//
+//}
 
-extension ReadDetailPlanController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let detailPlan = self.detailPlanViewModel {
-            return detailPlan.todoList.count
-        }
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        if let detailPlan = self.detailPlanViewModel {
-            cell.textLabel?.text = "\(detailPlan.todoList[indexPath.row])"
-        }
-//        cell.textLabel?.text = "Testing.."
-        return cell
-    }
-    
-    
-}

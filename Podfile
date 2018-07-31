@@ -10,10 +10,12 @@ target 'yoloholo' do
 	pod 'RxCocoa'
 	pod 'Alamofire'
 	pod 'SwiftyJSON'
-	pod "Floaty"
+	pod 'Floaty'
 	pod 'CalendarDateRangePickerViewController'
 	pod 'GooglePlaces'
 	pod 'GooglePlacePicker'
 	pod 'GoogleMaps'
 	pod 'FBSDKLoginKit'
+	pod 'SnapKit'
+    pod 'RxKeyboard'
 end
